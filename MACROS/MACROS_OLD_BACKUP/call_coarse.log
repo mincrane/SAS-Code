@@ -1,0 +1,1621 @@
+1                                                          The SAS System                             10:15 Monday, January 26, 2015
+
+NOTE: Copyright (c) 2002-2010 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.3 (TS1M2) 
+      Licensed to EBAY INC, Site 70063489.
+NOTE: This session is executing on the SunOS 5.10 (SUN 64) platform.
+
+
+
+NOTE: Enhanced analytical products:
+
+SAS/STAT 12.1, SAS/ETS 12.1, SAS/OR 12.2, SAS/IML 12.1, SAS/QC 12.1
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.40 seconds
+      cpu time            0.33 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /export/home/hemin/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          options compress=yes obs=max ls=max ps=max pageno=1 errors=2 nocenter symbolgen mlogic mprint;
+2          
+3          /*** create coarse classification for all variables in a dataset **/
+4          
+5          %include '/sas/ebaysr/MACROS/coarse_all.sas' ;       /*** coarse for all varialbes **/
+279        *%include '/sas/ebaysr/MACROS/coarse_var.sas';       /*** coarse for single variables **/      
+280        
+281        libname raw '/sas/hemin/working_macro';
+NOTE: Libref RAW was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /sas/hemin/working_macro
+281      !                                        
+282        
+283        
+284        /*** sample code : coarse for all variables **/
+285        
+286        data new;
+287         set raw.ep_sol_var_mb;
+288         keep perf_bad rat_gloss_m6 rat_a_cb_orig_m6 amt_orig_d3 true_indy_name wght wgt risk_region cat_level2 ;
+289        run;
+
+WARNING: The variable wght in the DROP, KEEP, or RENAME list has never been referenced.
+NOTE: There were 30728 observations read from the data set RAW.EP_SOL_VAR_MB.
+NOTE: The data set WORK.NEW has 30728 observations and 8 variables.
+NOTE: Compressing data set WORK.NEW decreased size by 32.94 percent. 
+      Compressed is 287 pages; un-compressed would require 428 pages.
+NOTE: DATA statement used (Total process time):
+      real time           3.58 seconds
+      cpu time            1.37 seconds
+      
+
+289      !     
+290         
+291        	
+292        %coarse_var(datin = new, perfvar = perf_bad ,bad_indg = 0, weight = ,bin = 10, output_file = ep_seg1_coarse.txt);
+MLOGIC(COARSE_VAR):  Beginning execution.
+MLOGIC(COARSE_VAR):  Parameter DATIN has value new
+MLOGIC(COARSE_VAR):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_VAR):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_VAR):  Parameter WEIGHT has value 
+MLOGIC(COARSE_VAR):  Parameter BIN has value 10
+MLOGIC(COARSE_VAR):  Parameter OUTPUT_FILE has value ep_seg1_coarse.txt
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MLOGIC(COARSE_VAR):  %IF condition %sysfunc(exist(&datin))=0 is FALSE
+MLOGIC(COARSE_VAR):  %LET (variable name is EXIST_WGT)
+MLOGIC(COARSE_VAR):  %LET (variable name is EXIST_PERF)
+MPRINT(COARSE_VAR):   data _NULL_;
+MPRINT(COARSE_VAR):   length varname $32.;
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   set new (obs=1);
+MPRINT(COARSE_VAR):   array nmr {*} _numeric_;
+MPRINT(COARSE_VAR):   do i=1 to dim(nmr);
+MPRINT(COARSE_VAR):   call vname(nmr{i},varname);
+SYMBOLGEN:  Macro variable WEIGHT resolves to 
+MLOGIC(COARSE_VAR):  %IF condition %length(&weight.) > 0 is FALSE
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+MPRINT(COARSE_VAR):   if upcase(varname) =upcase("perf_bad") then call symput('exist_perf','Y');
+MPRINT(COARSE_VAR):   end;
+MPRINT(COARSE_VAR):   run;
+
+NOTE: There were 1 observations read from the data set WORK.NEW.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+SYMBOLGEN:  Macro variable WEIGHT resolves to 
+SYMBOLGEN:  Macro variable EXIST_WGT resolves to 
+MLOGIC(COARSE_VAR):  %IF condition %length(&weight.)>0 and %length(&exist_wgt.) =0 is FALSE
+SYMBOLGEN:  Macro variable EXIST_PERF resolves to Y
+MLOGIC(COARSE_VAR):  %IF condition %length(&exist_perf.) = 0 is FALSE
+MLOGIC(COARSE_VAR):  %LET (variable name is BAD_VALUE)
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+MLOGIC(COARSE_VAR):  %IF condition %length(&bad_indg) = 0 is FALSE
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+MLOGIC(COARSE_VAR):  %IF condition &bad_indg ^= 1 and &bad_indg ^= 0 is FALSE
+SYMBOLGEN:  Macro variable BAD_VALUE resolves to Y
+MLOGIC(COARSE_VAR):  %IF condition &bad_value = N is FALSE
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   proc contents data = new out = _name(keep = name type) noprint;
+MPRINT(COARSE_VAR):   run;
+
+NOTE: The data set WORK._NAME has 8 observations and 2 variables.
+NOTE: Compressing data set WORK._NAME increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: PROCEDURE CONTENTS used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.19 seconds
+      
+
+MPRINT(COARSE_VAR):   proc sql noprint;
+MPRINT(COARSE_VAR):   select name into : numvar separated by ' ' from _name where type = 1;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+MPRINT(COARSE_VAR):   proc sql noprint;
+MPRINT(COARSE_VAR):   select name into : charvar separated by ' ' from _name where type = 2;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+SYMBOLGEN:  Macro variable WEIGHT resolves to 
+MLOGIC(COARSE_VAR):  %IF condition %length(&weight.) = 0 is TRUE
+MLOGIC(COARSE_VAR):  %LET (variable name is WEIGHT)
+MPRINT(COARSE_VAR):   proc sql noprint;
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   select count(*) ,sum(1) ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when 
+perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt into : total_raw_cnt, :total_wgt_cnt, :total_raw_good , :total_raw_bad , :tot_wgt_gd , :tot_wgt_bad from new;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+SYMBOLGEN:  Macro variable OUTPUT_FILE resolves to ep_seg1_coarse.txt
+MPRINT(COARSE_VAR):   proc printto print = "ep_seg1_coarse.txt" ;
+MPRINT(COARSE_VAR):   run;
+
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+MPRINT(COARSE_VAR):   data _null_;
+MPRINT(COARSE_VAR):   file print;
+SYMBOLGEN:  Macro variable DATIN resolves to new
+WARNING: Apparent invocation of macro SYSDATE not resolved.
+MPRINT(COARSE_VAR):   put "Coarse classification for the data new created at %SYSDATE. ";
+MPRINT(COARSE_VAR):   file log;
+MPRINT(COARSE_VAR):   run;
+
+NOTE: 1 lines were written to file PRINT.
+NOTE: The DATA step printed page 1.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&numvar,&listindex) eq) loop beginning.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_NUMERIC)
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 1
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to amt_orig_d3
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value amt_orig_d3
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select amt_orig_d3 ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case 
+when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 decreased size by 14.56 percent. 
+      Compressed is 88 pages; un-compressed would require 103 pages.
+NOTE: Table WORK.COARSE1 created, with 14818 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           3.66 seconds
+      cpu time            3.30 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   if (amt_orig_d3 le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (amt_orig_d3 le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   KEEP amt_orig_d3 _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 14818 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 7 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   title "AMT_ORIG_D3";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   VAR amt_orig_d3 _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   LABEL amt_orig_d3 = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 8.4
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.110
+MPRINT(COARSE_BIN1):   title5 "KS Value : 8.4   Information Value:  0.110 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 7 observations read from the data set WORK.COARSE2.
+NOTE: The PROCEDURE PRINT printed page 2.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.47 seconds
+      cpu time            0.43 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to amt_orig_d3
+MPRINT(COARSE_BIN1):   varname = "amt_orig_d3";
+SYMBOLGEN:  Macro variable _KS resolves to 8.4
+MPRINT(COARSE_BIN1):   ks = 8.4;
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.110
+MPRINT(COARSE_BIN1):   iv = 0.110;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: Compressing data set WORK.KSIV increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 11).
+NOTE: FORCE is specified, so dropping/truncating will occur.
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 305 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 1
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&numvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_NUMERIC)
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to perf_bad
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select perf_bad ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case when 
+perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: Table WORK.COARSE1 created, with 2 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           5.63 seconds
+      cpu time            4.95 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   if (perf_bad le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (perf_bad le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   KEEP perf_bad _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 2 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 2 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   title "PERF_BAD";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   VAR perf_bad _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to perf_bad
+MPRINT(COARSE_BIN1):   LABEL perf_bad = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 100.0
+SYMBOLGEN:  Macro variable _IVAL resolves to 23.025
+MPRINT(COARSE_BIN1):   title5 "KS Value : 100.0   Information Value:  23.025 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 2 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.98 seconds
+      cpu time            0.91 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to perf_bad
+MPRINT(COARSE_BIN1):   varname = "perf_bad";
+SYMBOLGEN:  Macro variable _KS resolves to 100.0
+MPRINT(COARSE_BIN1):   ks = 100.0;
+SYMBOLGEN:  Macro variable _IVAL resolves to 23.025
+MPRINT(COARSE_BIN1):   iv = 23.025;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Compression was disabled for data set WORK.KSIV because compression overhead would increase the size of the data set.
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 8).
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 306 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&numvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_NUMERIC)
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to rat_a_cb_orig_m6
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value rat_a_cb_orig_m6
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select rat_a_cb_orig_m6 ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt 
+,sum(case when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 25.00 percent. 
+      Compressed is 5 pages; un-compressed would require 4 pages.
+NOTE: Table WORK.COARSE1 created, with 471 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           5.33 seconds
+      cpu time            4.91 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   if (rat_a_cb_orig_m6 le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (rat_a_cb_orig_m6 le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   KEEP rat_a_cb_orig_m6 _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 471 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 5 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   title "RAT_A_CB_ORIG_M6";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   VAR rat_a_cb_orig_m6 _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   LABEL rat_a_cb_orig_m6 = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 12.5
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.199
+MPRINT(COARSE_BIN1):   title5 "KS Value : 12.5   Information Value:  0.199 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 5 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 4.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.28 seconds
+      cpu time            0.24 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to rat_a_cb_orig_m6
+MPRINT(COARSE_BIN1):   varname = "rat_a_cb_orig_m6";
+SYMBOLGEN:  Macro variable _KS resolves to 12.5
+MPRINT(COARSE_BIN1):   ks = 12.5;
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.199
+MPRINT(COARSE_BIN1):   iv = 0.199;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: Compressing data set WORK.KSIV increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 16).
+NOTE: FORCE is specified, so dropping/truncating will occur.
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 307 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 4
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&numvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_NUMERIC)
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 4
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to rat_gloss_m6
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value rat_gloss_m6
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select rat_gloss_m6 ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case 
+when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 decreased size by 7.69 percent. 
+      Compressed is 12 pages; un-compressed would require 13 pages.
+NOTE: Table WORK.COARSE1 created, with 1733 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           3.85 seconds
+      cpu time            3.35 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   if (rat_gloss_m6 le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (rat_gloss_m6 le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   KEEP rat_gloss_m6 _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 1733 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 13 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   title "RAT_GLOSS_M6";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   VAR rat_gloss_m6 _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   LABEL rat_gloss_m6 = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 47.8
+SYMBOLGEN:  Macro variable _IVAL resolves to 5.473
+MPRINT(COARSE_BIN1):   title5 "KS Value : 47.8   Information Value:  5.473 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 13 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 5.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.75 seconds
+      cpu time            0.62 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to rat_gloss_m6
+MPRINT(COARSE_BIN1):   varname = "rat_gloss_m6";
+SYMBOLGEN:  Macro variable _KS resolves to 47.8
+MPRINT(COARSE_BIN1):   ks = 47.8;
+SYMBOLGEN:  Macro variable _IVAL resolves to 5.473
+MPRINT(COARSE_BIN1):   iv = 5.473;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: Compressing data set WORK.KSIV increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 12).
+NOTE: FORCE is specified, so dropping/truncating will occur.
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 308 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 4
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 5
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&numvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_NUMERIC)
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 5
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to wgt
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value wgt
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select wgt ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case when 
+perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: Table WORK.COARSE1 created, with 2 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           3.37 seconds
+      cpu time            2.94 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   if (wgt le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (wgt le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   KEEP wgt _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 2 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 2 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   title "WGT";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   VAR wgt _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to wgt
+MPRINT(COARSE_BIN1):   LABEL wgt = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= "INFORMATION* 
+VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 100.0
+SYMBOLGEN:  Macro variable _IVAL resolves to 23.025
+MPRINT(COARSE_BIN1):   title5 "KS Value : 100.0   Information Value:  23.025 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 2 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 6.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.26 seconds
+      cpu time            0.25 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to wgt
+MPRINT(COARSE_BIN1):   varname = "wgt";
+SYMBOLGEN:  Macro variable _KS resolves to 100.0
+MPRINT(COARSE_BIN1):   ks = 100.0;
+SYMBOLGEN:  Macro variable _IVAL resolves to 23.025
+MPRINT(COARSE_BIN1):   iv = 23.025;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Compression was disabled for data set WORK.KSIV because compression overhead would increase the size of the data set.
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 3).
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 309 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 5
+SYMBOLGEN:  Macro variable NUMVAR resolves to amt_orig_d3 perf_bad rat_a_cb_orig_m6 rat_gloss_m6 wgt
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 6
+MLOGIC(COARSE_VAR):  %DO %UNTIL() condition is TRUE; loop will not iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&charvar,&listindex) eq) loop beginning.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_CHAR)
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 1
+MPRINT(COARSE_VAR):   proc sql noprint;
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to cat_level2
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   select count(*),count(distinct cat_level2)into: totalobs, :NumGroup from new;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+SYMBOLGEN:  Macro variable NUMGROUP resolves to       10
+MLOGIC(COARSE_VAR):  %IF condition &numgroup <= 50 is TRUE
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to cat_level2
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value cat_level2
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select cat_level2 ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case when 
+perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: Table WORK.COARSE1 created, with 10 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.36 seconds
+      cpu time            0.37 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   if (cat_level2 le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (cat_level2 le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   KEEP cat_level2 _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Character values have been converted to numeric values at the places given by: (Line):(Column).
+      292:1   292:1   
+NOTE: Invalid numeric data, cat_level2='Decreasing' , at line 292 column 1.
+_endfl=0 cat_level2=Decreasing total_cnt=6346 wgt_total_cnt=6346 raw_good_cnt=6148 raw_bad_cnt=198 wgt_good_cnt=6148 wgt_bad_cnt=198 _ks=0.9217520016 _lastind=3 _lastgd=0.2068223104 _lastbd=0.1976047904 _lastngd=6148 _lastnbd=198 _cntmiss=1
+_cumiv=0.0004201941 _rawgood=0 _rawbad=0 epi=0.00001 pct_gd=0.2068223104 pct_bd=0.1976047904 cum_pct_gd=0.2068223104 cum_pct_bd=0.1976047904 cum_gd=6148 cum_bd=198 cum_raw_gd=0 cum_raw_bd=0 ks=0.9217520016 _indg=3 _pgood=0.2068219693 _pbad=0.1976049102
+_nogood=6148 _nobad=198 _weight=0.0455887376 _ODDS=31.050505051 _bad_rate=0.0312007564 _ivalue=0.0004201941 _ERROR_=1 _N_=1
+NOTE: Invalid numeric data, cat_level2='Dormant' , at line 292 column 1.
+NOTE: Invalid numeric data, cat_level2='Dormant' , at line 292 column 1.
+WARNING: Limit set by ERRORS= option reached.  Further errors of this type will not be printed.
+_endfl=0 cat_level2=Dormant total_cnt=193 wgt_total_cnt=193 raw_good_cnt=174 raw_bad_cnt=19 wgt_good_cnt=174 wgt_bad_cnt=19 _ks=0.9217520016 _lastind=4 _lastgd=0.2126757721 _lastbd=0.2165668663 _lastngd=6322 _lastnbd=217 _cntmiss=2 _cumiv=0.0158119271
+_rawgood=0 _rawbad=0 epi=0.00001 pct_gd=0.0058534616 pct_bd=0.0189620758 cum_pct_gd=0.2126757721 cum_pct_bd=0.2165668663 cum_gd=6322 cum_bd=217 cum_raw_gd=0 cum_raw_bd=0 ks=0.3891094216 _indg=4 _pgood=0.0058631685 _pbad=0.0189711273 _nogood=174 _nobad=19
+_weight=-1.174228057 _ODDS=9.1578947368 _bad_rate=0.0984455959 _ivalue=0.015391733 _ERROR_=1 _N_=2
+NOTE: There were 10 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 10 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.03 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   title "CAT_LEVEL2";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   VAR cat_level2 _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to cat_level2
+MPRINT(COARSE_BIN1):   LABEL cat_level2 = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 12.1
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.296
+MPRINT(COARSE_BIN1):   title5 "KS Value : 12.1   Information Value:  0.296 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 10 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 7.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           5.23 seconds
+      cpu time            4.39 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to wgt
+MPRINT(COARSE_BIN1):   varname = "wgt";
+SYMBOLGEN:  Macro variable _KS resolves to 12.1
+MPRINT(COARSE_BIN1):   ks = 12.1;
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.296
+MPRINT(COARSE_BIN1):   iv = 0.296;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Compression was disabled for data set WORK.KSIV because compression overhead would increase the size of the data set.
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 3).
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 310 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 1
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&charvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_CHAR)
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+MPRINT(COARSE_VAR):   proc sql noprint;
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to risk_region
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   select count(*),count(distinct risk_region)into: totalobs, :NumGroup from new;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+SYMBOLGEN:  Macro variable NUMGROUP resolves to        4
+MLOGIC(COARSE_VAR):  %IF condition &numgroup <= 50 is TRUE
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to risk_region
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value risk_region
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select risk_region ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case 
+when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: Table WORK.COARSE1 created, with 4 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           7.03 seconds
+      cpu time            6.31 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   if (risk_region le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (risk_region le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   KEEP risk_region _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Character values have been converted to numeric values at the places given by: (Line):(Column).
+      292:1   292:1   
+NOTE: Invalid numeric data, risk_region='APAC' , at line 292 column 1.
+_endfl=0 risk_region=APAC total_cnt=5392 wgt_total_cnt=5392 raw_good_cnt=5241 raw_bad_cnt=151 wgt_good_cnt=5241 wgt_bad_cnt=151 _ks=2.5611697952 _lastind=2 _lastgd=0.1763103007 _lastbd=0.1506986028 _lastngd=5241 _lastnbd=151 _cntmiss=1 _cumiv=0.0040196585
+_rawgood=0 _rawbad=0 epi=0.00001 pct_gd=0.1763103007 pct_bd=0.1506986028 cum_pct_gd=0.1763103007 cum_pct_bd=0.1506986028 cum_gd=5241 cum_bd=151 cum_raw_gd=0 cum_raw_bd=0 ks=2.5611697952 _indg=2 _pgood=0.1763114852 _pbad=0.1507010677 _nogood=5241 _nobad=151
+_weight=0.1569540421 _ODDS=34.708609272 _bad_rate=0.028004451 _ivalue=0.0040196585 _ERROR_=1 _N_=1
+NOTE: Invalid numeric data, risk_region='EMEA' , at line 292 column 1.
+WARNING: Limit set by ERRORS= option reached.  Further errors of this type will not be printed.
+_endfl=0 risk_region=EMEA total_cnt=6702 wgt_total_cnt=6702 raw_good_cnt=6554 raw_bad_cnt=148 wgt_good_cnt=6554 wgt_bad_cnt=148 _ks=9.8387494674 _lastind=5 _lastgd=0.3967906883 _lastbd=0.2984031936 _lastngd=11795 _lastnbd=299 _cntmiss=2 _cumiv=0.0331701568
+_rawgood=0 _rawbad=0 epi=0.00001 pct_gd=0.2204803875 pct_bd=0.1477045908 cum_pct_gd=0.3967906883 cum_pct_bd=0.2984031936 cum_gd=11795 cum_bd=299 cum_raw_gd=0 cum_raw_bd=0 ks=9.8387494674 _indg=5 _pgood=0.2204793636 _pbad=0.1477072055 _nogood=6554
+_nobad=148 _weight=0.4005721285 _ODDS=44.283783784 _bad_rate=0.0220829603 _ivalue=0.0291504983 _ERROR_=1 _N_=2
+NOTE: There were 4 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 4 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   title "RISK_REGION";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   VAR risk_region _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to risk_region
+MPRINT(COARSE_BIN1):   LABEL risk_region = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 10.1
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.049
+MPRINT(COARSE_BIN1):   title5 "KS Value : 10.1   Information Value:  0.049 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 4 observations read from the data set WORK.COARSE2.
+NOTE: The PROCEDURE PRINT printed page 8.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.21 seconds
+      cpu time            0.19 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to wgt
+MPRINT(COARSE_BIN1):   varname = "wgt";
+SYMBOLGEN:  Macro variable _KS resolves to 10.1
+MPRINT(COARSE_BIN1):   ks = 10.1;
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.049
+MPRINT(COARSE_BIN1):   iv = 0.049;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Compression was disabled for data set WORK.KSIV because compression overhead would increase the size of the data set.
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 3).
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 311 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 2
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+MLOGIC(COARSE_VAR):  %DO %UNTIL(%scan(&charvar,&listindex) eq) condition is FALSE; loop will iterate again.
+MLOGIC(COARSE_VAR):  %LET (variable name is VAR_CHAR)
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+MPRINT(COARSE_VAR):   proc sql noprint;
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to true_indy_name
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_VAR):   select count(*),count(distinct true_indy_name)into: totalobs, :NumGroup from new;
+MPRINT(COARSE_VAR):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+SYMBOLGEN:  Macro variable NUMGROUP resolves to       45
+MLOGIC(COARSE_VAR):  %IF condition &numgroup <= 50 is TRUE
+MLOGIC(COARSE_BIN1):  Beginning execution.
+SYMBOLGEN:  Macro variable DATIN resolves to new
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable VAR_CHAR resolves to true_indy_name
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MLOGIC(COARSE_BIN1):  Parameter DATIN has value new
+MLOGIC(COARSE_BIN1):  Parameter PERFVAR has value perf_bad
+MLOGIC(COARSE_BIN1):  Parameter BAD_INDG has value 0
+MLOGIC(COARSE_BIN1):  Parameter VARNAME has value true_indy_name
+MLOGIC(COARSE_BIN1):  Parameter WEIGHT has value 1
+MLOGIC(COARSE_BIN1):  Parameter BIN has value 10
+MPRINT(COARSE_BIN1):   proc sql;
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable PERFVAR resolves to perf_bad
+SYMBOLGEN:  Macro variable BAD_INDG resolves to 0
+SYMBOLGEN:  Macro variable WEIGHT resolves to 1
+SYMBOLGEN:  Macro variable DATIN resolves to new
+MPRINT(COARSE_BIN1):   create table coarse1 as select true_indy_name ,count(*) as total_cnt ,sum(1) as wgt_total_cnt ,sum(case when perf_bad = 1- 0 then 1 else 0 end) as raw_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as raw_bad_cnt ,sum(case 
+when perf_bad = 1 - 0 then 1 else 0 end) as wgt_good_cnt ,sum(case when perf_bad = 0 then 1 else 0 end) as wgt_bad_cnt from new group by 1 order by 1;
+NOTE: Compressing data set WORK.COARSE1 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: Table WORK.COARSE1 created, with 46 rows and 7 columns.
+
+MPRINT(COARSE_BIN1):   quit;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.79 seconds
+      cpu time            0.93 seconds
+      
+
+MPRINT(COARSE_BIN1):   data coarse2;
+MPRINT(COARSE_BIN1):   set coarse1 end=_endfl;
+MPRINT(COARSE_BIN1):   retain _ks _lastind _lastgd _lastbd _lastngd _lastnbd _cntmiss 0 _cumiv 0 _rawgood _rawbad 0;
+MPRINT(COARSE_BIN1):   epi = 0.00001;
+SYMBOLGEN:  Macro variable TOT_WGT_GD resolves to    29726
+MPRINT(COARSE_BIN1):   pct_gd = wgt_good_cnt/ 29726 ;
+SYMBOLGEN:  Macro variable TOT_WGT_BAD resolves to     1002
+MPRINT(COARSE_BIN1):   pct_bd = wgt_bad_cnt/ 1002;
+MPRINT(COARSE_BIN1):   cum_pct_gd + pct_gd;
+MPRINT(COARSE_BIN1):   cum_pct_bd+ pct_bd;
+MPRINT(COARSE_BIN1):   cum_gd + wgt_good_cnt;
+MPRINT(COARSE_BIN1):   cum_bd +wgt_bad_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_gd+raw_good_cnt;
+MPRINT(COARSE_BIN1):   cum_raw_bd+raw_bad_cnt;
+MPRINT(COARSE_BIN1):   ks = 100*abs(cum_pct_gd - cum_pct_bd);
+MPRINT(COARSE_BIN1):   if (ks gt _ks) then _ks = ks;
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   if (true_indy_name le .z) then _cntmiss+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _indg=_cntmiss+int( (cum_pct_gd+cum_pct_bd)/(2/10) );
+MPRINT(COARSE_BIN1):   if (_indg>_lastind) or (_endfl=1) then do;
+MPRINT(COARSE_BIN1):   if ( (_indg=_lastind) and (_endfl=1)) then _indg=_indg+1;
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pgood=(cum_pct_gd-_lastgd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable BIN resolves to 10
+MPRINT(COARSE_BIN1):   _pbad= (cum_pct_bd-_lastbd+epi)/(1+((10/2)*epi));
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   if ((_pgood+_pbad)>0.04) or (_endfl=1) or (true_indy_name le .z) then do;
+MPRINT(COARSE_BIN1):   _lastgd= cum_pct_gd;
+MPRINT(COARSE_BIN1):   _lastbd= cum_pct_bd;
+MPRINT(COARSE_BIN1):   _nogood= cum_gd-_lastngd;
+MPRINT(COARSE_BIN1):   _nobad = cum_bd -_lastnbd;
+MPRINT(COARSE_BIN1):   _lastngd= cum_gd;
+MPRINT(COARSE_BIN1):   _lastnbd= cum_bd;
+MPRINT(COARSE_BIN1):   _weight=LOG(_pgood/_pbad);
+MPRINT(COARSE_BIN1):   _ODDS = divide(_nogood,_NOBAD);
+MPRINT(COARSE_BIN1):   _bad_rate = _nobad/(_nogood+_nobad) ;
+MPRINT(COARSE_BIN1):   _ivalue = (_pgood-_pbad)* _weight;
+MPRINT(COARSE_BIN1):   _cumiv+_ivalue;
+MPRINT(COARSE_BIN1):   if _endfl eq 1 then do;
+MPRINT(COARSE_BIN1):   call symput('_ival',compress(put(_cumiv,12.3)));
+MPRINT(COARSE_BIN1):   call symput('_ks',compress(put(_ks,6.1)));
+MPRINT(COARSE_BIN1):   end;
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   KEEP true_indy_name _indg _nogood _pgood _nobad _pbad _weight _ivalue cum_pct_gd cum_pct_bd cum_raw_gd cum_raw_bd _odds _cumiv _ks _bad_rate _cntmiss;
+MPRINT(COARSE_BIN1):   output;
+MPRINT(COARSE_BIN1):   cum_raw_gd=0;
+MPRINT(COARSE_BIN1):   cum_raw_bd=0;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   end;
+MPRINT(COARSE_BIN1):   _lastind=_indg;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Character values have been converted to numeric values at the places given by: (Line):(Column).
+      292:1   292:1   
+NOTE: Invalid numeric data, true_indy_name='accounting' , at line 292 column 1.
+NOTE: Invalid numeric data, true_indy_name='accounting' , at line 292 column 1.
+_endfl=0 true_indy_name=accounting total_cnt=20 wgt_total_cnt=20 raw_good_cnt=20 raw_bad_cnt=0 wgt_good_cnt=20 wgt_bad_cnt=0 _ks=0.1659602144 _lastind=2 _lastgd=0.0086456301 _lastbd=0.0069860279 _lastngd=257 _lastnbd=7 _cntmiss=2 _cumiv=0.0029717677
+_rawgood=0 _rawbad=0 epi=0.00001 pct_gd=0.0006728117 pct_bd=0 cum_pct_gd=0.0086456301 cum_pct_bd=0.0069860279 cum_gd=257 cum_bd=7 cum_raw_gd=0 cum_raw_bd=0 ks=0.1659602144 _indg=2 _pgood=0.0006827775 _pbad=9.9995E-6 _nogood=20 _nobad=0 _weight=4.2236340038
+_ODDS=I _bad_rate=0 _ivalue=0.0028415682 _ERROR_=1 _N_=2
+NOTE: Invalid numeric data, true_indy_name='adults' , at line 292 column 1.
+NOTE: Invalid numeric data, true_indy_name='adults' , at line 292 column 1.
+WARNING: Limit set by ERRORS= option reached.  Further errors of this type will not be printed.
+_endfl=0 true_indy_name=adults total_cnt=7 wgt_total_cnt=7 raw_good_cnt=5 raw_bad_cnt=2 wgt_good_cnt=5 wgt_bad_cnt=2 _ks=0.1659602144 _lastind=3 _lastgd=0.008813833 _lastbd=0.0089820359 _lastngd=262 _lastnbd=9 _cntmiss=3 _cumiv=0.0073966242 _rawgood=0
+_rawbad=0 epi=0.00001 pct_gd=0.0001682029 pct_bd=0.001996008 cum_pct_gd=0.008813833 cum_pct_bd=0.0089820359 cum_gd=262 cum_bd=9 cum_raw_gd=0 cum_raw_bd=0 ks=0.016820292 _indg=3 _pgood=0.000178194 _pbad=0.0020059077 _nogood=5 _nobad=2 _weight=-2.420979048
+_ODDS=2.5 _bad_rate=0.2857142857 _ivalue=0.0044248565 _ERROR_=1 _N_=3
+NOTE: There were 46 observations read from the data set WORK.COARSE1.
+NOTE: The data set WORK.COARSE2 has 46 observations and 17 variables.
+NOTE: Compressing data set WORK.COARSE2 increased size by 100.00 percent. 
+      Compressed is 2 pages; un-compressed would require 1 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   title "TRUE_INDY_NAME";
+MPRINT(COARSE_BIN1):   PROC PRINT DATA=coarse2 SPLIT='*' noobs;
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   VAR true_indy_name _nogood cum_raw_gd _nobad cum_raw_bd _pgood _pbad _weight _ivalue _bad_rate cum_pct_gd cum_pct_bd _ODDS;
+SYMBOLGEN:  Macro variable VARNAME resolves to true_indy_name
+MPRINT(COARSE_BIN1):   LABEL true_indy_name = "HIGH END" _nogood= "GOOD" cum_raw_gd = "RAW* GOOD" _nobad= "BAD" cum_raw_bd= "RAW* BAD" _pgood= "PROB.* GOOD" _pbad= "PROB.* BAD" _weight= "WOE" cum_pct_gd= "CUM.* GOOD" cum_pct_bd= "CUM.* BAD" _ivalue= 
+"INFORMATION* VALUE" _bad_Rate= "BAD RATE" _Odds= "Odds";
+MPRINT(COARSE_BIN1):   SUM _ivalue _nogood _nobad _pgood _pbad cum_raw_gd cum_raw_bd;
+MPRINT(COARSE_BIN1):   FORMAT _nogood _nobad 9.0;
+MPRINT(COARSE_BIN1):   FORMAT _pgood _pbad _weight _ivalue cum_pct_gd cum_pct_bd _bad_rate 5.3;
+MPRINT(COARSE_BIN1):   FORMAT _odds 8.1;
+MPRINT(COARSE_BIN1):   title4 " ";
+SYMBOLGEN:  Macro variable _KS resolves to 8.5
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.333
+MPRINT(COARSE_BIN1):   title5 "KS Value : 8.5   Information Value:  0.333 ";
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: There were 46 observations read from the data set WORK.COARSE2.
+NOTE: At least one W.D format was too small for the number to be printed. The decimal may be shifted by the "BEST" format.
+NOTE: The PROCEDURE PRINT printed page 9.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           1.92 seconds
+      cpu time            1.63 seconds
+      
+
+MPRINT(COARSE_BIN1):   data ksiv;
+SYMBOLGEN:  Macro variable VAR_NUMERIC resolves to wgt
+MPRINT(COARSE_BIN1):   varname = "wgt";
+SYMBOLGEN:  Macro variable _KS resolves to 8.5
+MPRINT(COARSE_BIN1):   ks = 8.5;
+SYMBOLGEN:  Macro variable _IVAL resolves to 0.333
+MPRINT(COARSE_BIN1):   iv = 0.333;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Compression was disabled for data set WORK.KSIV because compression overhead would increase the size of the data set.
+NOTE: The data set WORK.KSIV has 1 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+MPRINT(COARSE_BIN1):   proc append base = raw.test_ksiv_nowgt data = ksiv force;
+MPRINT(COARSE_BIN1):   run;
+
+NOTE: Appending WORK.KSIV to RAW.TEST_KSIV_NOWGT.
+WARNING: Variable varname has different lengths on BASE and DATA files (BASE 9 DATA 3).
+NOTE: There were 1 observations read from the data set WORK.KSIV.
+NOTE: 1 observations added.
+NOTE: The data set RAW.TEST_KSIV_NOWGT has 312 observations and 3 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+MLOGIC(COARSE_BIN1):  Ending execution.
+MPRINT(COARSE_VAR):  ;
+MLOGIC(COARSE_VAR):  %LET (variable name is LISTINDEX)
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 3
+SYMBOLGEN:  Macro variable CHARVAR resolves to cat_level2 risk_region true_indy_name
+SYMBOLGEN:  Macro variable LISTINDEX resolves to 4
+MLOGIC(COARSE_VAR):  %DO %UNTIL() condition is TRUE; loop will not iterate again.
+MPRINT(COARSE_VAR):   proc printto;
+MPRINT(COARSE_VAR):   run;
+
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+MLOGIC(COARSE_VAR):  Ending execution.
+293        
+294        endsas;
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           45.62 seconds
+      cpu time            38.67 seconds
+      

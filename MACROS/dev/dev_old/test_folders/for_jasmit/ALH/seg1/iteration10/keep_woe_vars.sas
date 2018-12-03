@@ -1,0 +1,5 @@
+
+amt_ach_14d_cap
+CUST_ACCT_TYPE_CODE
+AMT_GTPV_L3D_CAP
+amt_email_pmt_14d_cap

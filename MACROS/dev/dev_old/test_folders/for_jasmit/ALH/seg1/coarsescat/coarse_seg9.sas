@@ -1,0 +1,290 @@
+libname dat '/sas/pprd/austin/projects/alh_offebay/data';
+options nocenter formdlim='-';
+title1 'Name of Population or Model';
+%include '/sas/pprd/austin/operations/misc/saspp/Macros_General/macros_general.sas';
+data summary_coarses;
+length longname $50 name $50;
+N=0; NMISS=0; MEAN=0; MAX=0; MIN=0; NAME='        ';
+P1=0; P5=0; P10=0; P15=0; P25=0; P50=0; P75=0; P90=0; P95=0; P99=0;STD=0; PMISS=0; KS=0; IVAL=0;
+run;
+
+
+data seg; 
+	set dat.alh_offebay_na_sample;
+	where seg ^= 'Occasional';
+	
+	%include '/sas/pprd/austin/projects/alh_offebay/vargen/ltao/impute_mean.txt';
+	
+	%include '/sas/pprd/austin/projects/alh_offebay/vargen/ltao/clusterkeep_na.sas';
+	
+	keep sam_wgt bad ;
+run;
+
+proc stdize data=seg
+	MISSING=0 
+	REPONLY 
+	out=seg_mod;
+run; 
+ 
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,biz_cat_name_risk                                 ,,summary_coarses);/* length of 2 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,eby_cat_name_risk                                 ,,summary_coarses);/* length of 2 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,meta_cat_name_risk                                ,,summary_coarses);/* length of 2 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pp_cat_name_risk                                  ,,summary_coarses);/* length of 2 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,web_cat_name_risk                                 ,,summary_coarses);/* length of 2 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,prmry_reside_cntry_code                           ,,summary_coarses);/* length of 3 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,seg                                               ,,summary_coarses);/* length of 10 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,cont_slr_flag                                     ,,summary_coarses);/* length of 21 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,acct_cat_name                                     ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,biz_cat_name                                      ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,ebay_cat_id_2                                     ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,ebay_cat_id_3                                     ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,ebay_cat_name                                     ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,meta_cat_name                                     ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pp_cat_name                                       ,,summary_coarses);/* length of 50 */
+%finefct_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,web_cat_name                                      ,,summary_coarses);/* length of 50 */
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_ach_30d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_ach_7d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_avg_balance_l3d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_avg_balance_l8_14d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_avg_balance_l90d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_email_pmt_30d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_email_pmt_7d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_gtpv_l14d_ms                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_gtpv_l180d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_gtpv_l2d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_nsf_ach_90d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_req_mon_90d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_risk_ach_90d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_scs_txn_14d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_scs_txn_30d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_scs_txn_60d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_scs_txn_7d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_sigln_60d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_suc_wtdr_14d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_suc_wtdr_30d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_suc_wtdr_7d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,amt_txn_refund_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_orig_txn_90d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_req_mon_30d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_risk_ach_30d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_sed_mon_14d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_sed_mon_60d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_sigln_90d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_amt_txn_refund_180d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_child_age_num_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_linked_acct_tpv_30d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_ln_dist                                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_addrs_14d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_addrs_90d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_ebay_acct_180d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_frdq_30d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_inact_cc_90d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_nb_30d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_nsf_ach_7d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_orig_txn_30d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_orig_txn_90d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_phn_180d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_risk_ach_30d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_sed_mon_30d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_sed_mon_60d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_sed_mon_7d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_suc_wtdr_7d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_n_urt_30d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_time_2_refund_l180d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,avg_time_2_refund_l60d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_ach_vrfd_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_ach_vrfd_snc_ad_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_cc_added_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_cc_vrfd_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_cc_vrfd_snc_ad_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,d_prmry_em_vrfd_snc_ad_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,dnsty_addrs_states_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,dnsty_bank_country_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,earliest_email_dof_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,earliest_nb_dof_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,ebay_tpv_ratio                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,latest_address_dof_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,latest_ebay_acct_dof_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,latest_frdq_dof_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,latest_frdq_dof_ms                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ach_30d_cap                                     ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_addrs_90d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_all_nb_co_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_all_nb_l14d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_all_nb_l75d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_bank_cap                                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_bank_l150d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_bank_l30d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_bank_l90d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_buy_cc_60_90d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_buyer_30_60d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_buyer_60d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_days_pos_balance_l14d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_days_pos_balance_l90d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_cc_14_30d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_cc_7_14d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_cty_7_14d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_cty_7d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_reg_14_30d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_reg_30_60d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_reg_30d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_reg_60_90d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_buy_reg_60d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_vid_60_90d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_vid_7d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_dis_vid_90d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ebay_acct_l150d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ebay_acct_l60d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_email_cap                                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_email_l150d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_email_l90d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_email_pmt_14d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_frdq_l150d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_frdq_l60d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_inact_cc_60d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_new_l21_28d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_new_l7d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_used_l15_21d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_used_l3d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_used_l60d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_used_l61_90d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_ip_used_l8_14d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_linked_acct_all_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_linked_acct_ars_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_linked_acct_arsfld_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_linked_ebay_acct_fact_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_mrch_urt_l180d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_mrch_urt_l75d_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_nb_l180d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_nb_l60d_cap                                     ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_nsf_ach_90d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_orig_txn_14d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_orig_txn_7d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_phn_l150d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_phn_l75d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_phone_cap                                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_req_mon_30d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_req_mon_90d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_risk_ach_90d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_sigln_60d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_suc_wtdr_60d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_txn_dend_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_txn_pass_l120d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_txn_refund_l180d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_urt_l150d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_urt_l75d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_vid_30_60d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,n_vid_7_14d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,npct_ach_authorized_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,npct_ach_inactive_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,num_mth_trans                                     ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,num_txs_30d_cap                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_cc_14_30d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_cc_14d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_cc_90_60d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_cty_14d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_reg_14_30d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_reg_7_14d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_reg_7d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_buy_reg_90d_cap                                ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_30_60d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_30d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_60_90d_cap                                 ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_7_14d_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_7d_cap                                     ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pc_vid_90d_cap                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_amt_refund_90_180d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_ip_new_used_l14d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_ip_new_used_l30d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_ip_new_used_l60d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_bank_14_180d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_d_pos_bal_14_90_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_ebay_acct_14_180d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_ebay_acct_30_180d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_ebay_acct_90_180d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_frdq_14_180d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_frdq_90_180d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_mrch_urt_14_180d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_mrch_urt_90_180d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_phn_14_180d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_phn_30_180d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,pct_n_refund_30_180_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_all_txn_14_7_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_avg_bal_14_90_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_den_txn_90_30_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_gtpv_30_60d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_gtpv_30_90d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_gtpv_7_14d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_orig_txn_60_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_orig_txn_90_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_refund_30_60_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_refund_30_90_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_req_mon_14_7_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_sed_mon_60_30_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_sed_mon_90_30_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_sigln_14_7_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_suc_wdtr_60_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_amt_suc_wdtr_90_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_gtpv_30_180_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_n_frdq_30_180d_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_n_nb_30_180d_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_n_scs_txn_30_14_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_n_sigln_30_14_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_n_urt_30_180d_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_avg_neg_bal_14_90_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_ip_used_l30_60d_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_ip_used_l7_14d_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_addrs_60_30_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_addrs_90_30_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_den_txn_60_30_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_den_txn_90_30_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buy_cc_14_7_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buy_cc_60_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buy_cc_90_30_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buy_cty_14_7_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buy_reg_60_30_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_buyer_30_14_cap                         ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_vid_14_7_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_dis_vid_30_14_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_email_pmt_14_7_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_frdq_30_60d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_frdq_30_90d_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_frdq_7_14d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_inact_cc_60_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_inact_cc_90_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_orig_txn_60_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_orig_txn_90_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_pc_vid_90_30_cap                            ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_pos_bal_30_60_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_req_mon_60_30_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_req_mon_90_30_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_rev_txn_60_30_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_sigln_90_30_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_suc_wdtr_14_7_cap                           ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_txn_refund_30_60d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_txn_refund_30_90d_cap                       ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_urt_30_60d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_urt_30_90d_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_vid_60_30_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_n_vid_90_30_cap                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_pc_buy_cty_30_14_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_pc_buy_reg_60_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_pc_buy_reg_90_30_cap                          ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_pc_vid_30_14_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,rat_pc_vid_60_30_cap                              ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_2r_pmt_loss_l1m_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_2r_pmt_loss_l6m_cap                             ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_avg_b_ip_scr                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_b_v21_ato_scr_avg                               ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_b_v2_scr_bst                                    ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_b_v2_scr_wrst                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_rb_percentage                                   ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_sndr_merchd_loss_l3m_cap                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_total_tx                                        ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,s_worst_b_ip_scr                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,web_cat_conf_cap                                  ,10.0,10,summary_coarses);
+%finesplt_f(seg_mod,bad,BAD ,0,0,GOOD ,1,1,sam_wgt ,worst_dist                                        ,10.0,10,summary_coarses);
+
+ proc sort data= summary_coarses ; by descending KS name; run; 
+
+%desc_f(summary_coarses);
